@@ -27,7 +27,7 @@
       },
       {
         "tag": "fallback",
-        "address": "1.1.1.1",
+        "address": "8.8.8.8",
         "address_resolver": "google",
         "detour": "Proxy"
       },
@@ -37,43 +37,12 @@
         "detour": "direct"
       },
       {
+        "tag": "fakeip-dns",
+        "address": "fakeip"
+      },
+      {
         "tag": "block-dns",
         "address": "rcode://success"
-      },
-      {
-        "tag": "Youtubedns",
-        "address": "1.1.1.1",
-        "detour": "Youtube"
-      },
-      {
-        "tag": "Telegramdns",
-        "address": "1.1.1.1",
-        "detour": "Telegram"
-      },
-      {
-        "tag": "Githubdns",
-        "address": "1.1.1.1",
-        "detour": "Github"
-      },
-      {
-        "tag": "Openaidns",
-        "address": "1.1.1.1",
-        "detour": "Openai"
-      },
-      {
-        "tag": "Netflixdns",
-        "address": "1.1.1.1",
-        "detour": "Netflix"
-      },
-      {
-        "tag": "Googledns",
-        "address": "1.1.1.1",
-        "detour": "Google"
-      },
-      {
-        "tag": "Directdns",
-        "address": "1.1.1.1",
-        "detour": "Direct"
       }
     ],
     "rules": [
@@ -85,37 +54,37 @@
         "rule_set": [
           "Youtube0"
         ],
-        "server": "Youtubedns"
+        "server": "fakeip-dns"
       },
       {
         "rule_set": [
           "Telegram1"
         ],
-        "server": "Telegramdns"
+        "server": "fakeip-dns"
       },
       {
         "rule_set": [
           "Github0"
         ],
-        "server": "Githubdns"
+        "server": "fakeip-dns"
       },
       {
         "rule_set": [
           "Openai0"
         ],
-        "server": "Openaidns"
+        "server": "fakeip-dns"
       },
       {
         "rule_set": [
           "Netflix0"
         ],
-        "server": "Netflixdns"
+        "server": "fakeip-dns"
       },
       {
         "rule_set": [
           "Google0"
         ],
-        "server": "Googledns"
+        "server": "fakeip-dns"
       },
       {
         "rule_set": [
@@ -128,10 +97,14 @@
           "A"
         ],
         "rewrite_ttl": 1,
-        "server": "fallback"
+        "server": "fakeip-dns"
       }
     ],
-    "strategy": "ipv4_only"
+    "strategy": "ipv4_only",
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15"
+    }
   },
   "inbounds": [
     {
@@ -142,20 +115,19 @@
       "sniff": true
     },
     {
-      "type": "tun",
-      "inet4_address": "172.19.0.1/30",
-      "stack": "system",
+      "type": "tproxy",
+      "tag": "tproxy-in",
+      "listen": "::",
+      "listen_port": 9888,
+      "sniff_override_destination": true,
+      "sniff": true
+    },
+    {
+      "type": "direct",
+      "listen": "::",
+      "listen_port": 53,
       "sniff": true,
-      "auto_route": true,
-      "strict_route": true,
-      "gso": false,
-      "platform": {
-        "http_proxy": {
-          "enabled": true,
-          "server": "127.0.0.1",
-          "server_port": 8888
-        }
-      }
+      "tag": "dns-in"
     }
   ],
   "route": {
@@ -318,7 +290,8 @@
         "Aliyun",
         "YxVM-Miku",
         "YxVM-HYTRON",
-        "YxVM-Akile"
+        "YxVM-Akile",
+        "V.PS"
       ],
       "interrupt_exist_connections": true,
       "type": "selector"
@@ -331,7 +304,8 @@
         "Aliyun",
         "YxVM-Miku",
         "YxVM-HYTRON",
-        "YxVM-Akile"
+        "YxVM-Akile",
+        "V.PS"
       ],
       "interrupt_exist_connections": true,
       "type": "selector"
@@ -344,7 +318,8 @@
         "Aliyun",
         "YxVM-Miku",
         "YxVM-HYTRON",
-        "YxVM-Akile"
+        "YxVM-Akile",
+        "V.PS"
       ],
       "interrupt_exist_connections": true,
       "type": "selector"
@@ -357,7 +332,8 @@
         "Aliyun",
         "YxVM-Miku",
         "YxVM-HYTRON",
-        "YxVM-Akile"
+        "YxVM-Akile",
+        "V.PS"
       ],
       "interrupt_exist_connections": true,
       "type": "selector"
@@ -370,7 +346,8 @@
         "Aliyun",
         "YxVM-Miku",
         "YxVM-HYTRON",
-        "YxVM-Akile"
+        "YxVM-Akile",
+        "V.PS"
       ],
       "interrupt_exist_connections": true,
       "type": "selector"
@@ -383,7 +360,8 @@
         "Aliyun",
         "YxVM-Miku",
         "YxVM-HYTRON",
-        "YxVM-Akile"
+        "YxVM-Akile",
+        "V.PS"
       ],
       "interrupt_exist_connections": true,
       "type": "selector"
@@ -396,7 +374,8 @@
         "Aliyun",
         "YxVM-Miku",
         "YxVM-HYTRON",
-        "YxVM-Akile"
+        "YxVM-Akile",
+        "V.PS"
       ],
       "interrupt_exist_connections": true,
       "type": "selector"
@@ -491,6 +470,28 @@
         "enabled": true,
         "insecure": true,
         "server_name": "178.173.248.177"
+      }
+    },
+    {
+      "tag": "V.PS",
+      "server": "194.36.24.139",
+      "server_port": 12231,
+      "type": "vless",
+      "uuid": "ef5de915-312c-427f-8e4f-f759e0764cdb",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": true,
+        "server_name": "itunes.apple.com",
+        "reality": {
+          "enabled": true,
+          "public_key": "XdGHYYZ2Db1RUW2SlD5ks65Cl0EfXBsf7aDq4JuBJg8",
+          "short_id": "931a69089a963aab"
+        },
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
       }
     }
   ]
